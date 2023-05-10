@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "annee")
 public class AnneeModel {
 
-//  Attributes
+// Attributes
     @Id
     private String id;
     private String date_debut;
