@@ -18,7 +18,7 @@ public class AnneeController {
         return "Hello World to SIGES APP!";
     }
     @PostMapping("/addYear")
-    public String saveBook(@RequestBody AnneeModel annee){
+    public String saveCycle(@RequestBody AnneeModel annee){
         anneeRepository.save(annee);
         return "Added Successfully";
     }
@@ -31,7 +31,6 @@ public class AnneeController {
     @DeleteMapping("/deleteYear/{id}")
     public String deleteYear(@PathVariable String id){
         anneeRepository.deleteById(id);
-
         return "Deleted Successfully";
     }
 
