@@ -14,10 +14,11 @@ public class CycleController {
     @Autowired(required = false)
     private CycleRepository cycleRepository;
 
-    @GetMapping("/home")
+    @GetMapping("/homeCycle")
     public String hello() {
         return "Hello World to SIGES APP!";
     }
+
     @PostMapping("/addCycle")
     public String saveCycle(@RequestBody CycleModel cycle){
         cycleRepository.save(cycle);
