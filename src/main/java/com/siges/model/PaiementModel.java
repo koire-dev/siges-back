@@ -6,20 +6,19 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "personnel")
-public class PersonnelModel {
+@Document(collection = "paiement")
+public class PaiementModel {
     @Id
     private String id;
-    private String nom_prenom;
-    private String email;
-    private String telephone;
-    private String cni;
-    private String image;
+    private String motif;
+    private String date_paiement;
+    private String status;
 
-//    Role Model
-    private RoleModel role;
-    private CompteModel compte;
+    private List<TrancheModel> dossierTranche = new ArrayList<>();
 }

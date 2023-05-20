@@ -17,6 +17,7 @@ public class AnneeController {
     public String hello() {
         return "Hello World to SIGES APP!";
     }
+
     @PostMapping("/addYear")
     public String saveCycle(@RequestBody AnneeModel annee){
         anneeRepository.save(annee);

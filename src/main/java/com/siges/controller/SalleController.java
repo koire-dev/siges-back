@@ -24,12 +24,12 @@ public class SalleController {
         return "Added Successfully";
     }
 
-    @GetMapping("/findAllsalle")
+    @GetMapping("/findAllSalle")
     public List<SalleModel> getSalles() {
         return salleRepository.findAll();
     }
 
-    @DeleteMapping("/deletesalle/{id}")
+    @DeleteMapping("/deleteSalle/{id}")
     public String deleteSalle(@PathVariable String id){
         salleRepository.deleteById(id);
         return "Deleted Successfully";

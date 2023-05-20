@@ -9,17 +9,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "personnel")
-public class PersonnelModel {
+@Document(collection = "infos_etablissement")
+public class InfoEtablissementModel {
     @Id
     private String id;
-    private String nom_prenom;
-    private String email;
-    private String telephone;
-    private String cni;
-    private String image;
-
-//    Role Model
-    private RoleModel role;
-    private CompteModel compte;
+    private String nom;
+    private String devise;
+    private String logo;
+    private String bp;
+    private String mail;
+    private String contact;
+    private String reglement_interieur;
 }

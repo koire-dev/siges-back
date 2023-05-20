@@ -9,17 +9,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "personnel")
-public class PersonnelModel {
+@Document(collection = "sanction")
+public class SanctionModel {
     @Id
     private String id;
-    private String nom_prenom;
-    private String email;
-    private String telephone;
-    private String cni;
-    private String image;
+    private String motif;
+    private String date_debut;
+    private String date_fin;
 
-//    Role Model
-    private RoleModel role;
-    private CompteModel compte;
+//  @Migrations
+    private TypeSanctionModel type_sanction;
 }
