@@ -19,14 +19,12 @@ public class DossierModel {
     private String nom_dossier;
     private String created_at;
 
-//    @Migrations
-//    @DBRef
-    private EleveModel eleve;
+//  @Migrations
     private AnneeModel annee;
     private SalleModel salle;
 
-    private Set<PaiementModel> paiementFrais = new HashSet<>();
     private Set<MatiereModel> listOfMatiereNotes = new HashSet<>();
+    private Set<PaiementModel> paiementFrais = new HashSet<>();
     private Set<SanctionModel> listOfSanctions = new HashSet<>();
     private Set<PermissionModel> listOfPermissions = new HashSet<>();
 
