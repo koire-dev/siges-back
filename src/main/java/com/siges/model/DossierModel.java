@@ -8,23 +8,22 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "matiere")
-public class MatiereModel {
+@Document(collection = "dossier")
+public class DossierModel {
+
     @Id
     private String id;
-    private String intitule;
-    private String code;
-    private String groupe_matiere;
-    private String nom_enseignant;
-    private String grade_enseignant;
-    private String role_enseignant;
     @DBRef(lazy = true)
-    private List<EleveModel> eleve;
+    private CycleModel cycle;
+    @DBRef(lazy = true)
+    private SectionModel section;
+    @DBRef(lazy = true)
+    private AnneeModel annee_aca;
+    @DBRef(lazy = true)
+    private SalleModel salle;
 }
