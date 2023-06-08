@@ -20,11 +20,18 @@ public class MatiereModel {
     @Id
     private String id;
     private String intitule;
-    private String code;
+//    private String code;
     private String groupe_matiere;
-    private String nom_enseignant;
-    private String grade_enseignant;
-    private String role_enseignant;
+
     @DBRef(lazy = true)
+    private EnseignantModel enseignant;
+    @DBRef
     private List<EleveModel> eleve;
+
+    public MatiereModel(String id, String intitule, String groupe_matiere) {
+
+        this.id = id;
+        this.intitule = intitule;
+        this.groupe_matiere = groupe_matiere;
+    }
 }

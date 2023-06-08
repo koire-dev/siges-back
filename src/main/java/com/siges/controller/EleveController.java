@@ -5,10 +5,13 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.result.UpdateResult;
 import com.siges.model.EleveModel;
 import com.siges.model.NotesModel;
+import com.siges.model.SalleModel;
 import com.siges.repository.EleveRepository;
 import com.siges.repository.MatiereRepository;
 import com.siges.repository.NotesRepository;
+import com.siges.repository.SalleRepository;
 import com.siges.service.EleveService;
+import com.siges.service.SalleService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -31,6 +34,11 @@ public class EleveController {
     private NotesRepository notesRepository;
     @Autowired
     private EleveService eleveService;
+    @Autowired
+    private SalleRepository salleRepository;
+    @Autowired
+    private SalleService salleService;
+
     MongoClient mongo = MongoClients.create("mongodb://localhost:27017");
     private MongoOperations mongoOperations = new MongoTemplate(mongo, "sigesDB");
 
@@ -40,7 +48,20 @@ public class EleveController {
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         EleveModel createdEleve = eleveRepository.save(eleveModel);
+        SalleModel salleModel = eleveModel.getSalle();
+        SalleModel sal = salleRepository.findById(salleModel.getId()).orElse(new SalleModel(
+                salleModel.getId(),
+                salleModel.getLabel()
+        ));
+        List<EleveModel> eleveModelList = new ArrayList<>();
+        eleveModelList.add(eleveModel);
+        for (EleveModel eleve : sal.getEleve()){
+            eleveModelList.add(eleve);
+        }
+        sal.setEleve(eleveModelList);
+        SalleModel salle = salleService.updateSalle(sal.getId(), sal);
         return new ResponseEntity<>(createdEleve, HttpStatus.OK);
     }
 
@@ -49,52 +70,10 @@ public class EleveController {
         return eleveRepository.findAll();
     }
 
-//  Je n'arrive pas a ajouter une note a l'eleve
     @PutMapping("/updateEleve/{id}")
     public ResponseEntity<EleveModel> updateEleve(@PathVariable(value = "id") String id, @RequestBody EleveModel eleveModel){
-        EleveModel eleve = eleveRepository.findById(id).orElse(null);
-        if (eleve == null)
-        {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
 
-        HashSet<NotesModel> notesModelList = new HashSet<>();
-
-        for(NotesModel notesModel : eleveModel.getNotes()){
-
-            NotesModel notes = notesRepository.findById(notesModel.getId()).orElse(null);
-            notesModelList.add(new NotesModel(notes.getId(), notes.getAppreciation(),notes.getValeur(), notes.getSequence(), notes.getTrimestre()));
-        }
-        if (notesModelList.isEmpty())
-        {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-
-        Update update = new Update();
-        update.set("nom", eleveModel.getNom());
-        update.set("apte", eleveModel.getApte());
-        update.set("date_naiss", eleveModel.getDate_naiss());
-        update.set("email_parent", eleveModel.getEmail_parent());
-        update.set("Lieu_naiss",eleveModel.getLieu_naiss());
-        update.set("nationalite", eleveModel.getNationalite());
-        update.set("nom_parent", eleveModel.getNom_parent());
-        update.set("option", eleveModel.getOption());
-        update.set("redoublant", eleveModel.getRedoublant());
-        update.set("sexe", eleveModel.getSexe());
-        update.set("tel_parent", eleveModel.getTel_parent());
-        update.set("notes", notesModelList);
-        update.set("dossier", eleveModel.getDossier());
-        Query query = new Query(Criteria.where("_id").is(eleveModel.getId()));
-        UpdateResult updateResult = mongoOperations.updateFirst(query, update, EleveModel.class);
-        if (updateResult.getModifiedCount() == 1)
-        {
-            eleve = eleveRepository.findById(eleveModel.getId()).get();
-            return new ResponseEntity<>(eleve, HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(eleveService.updateEleve(id, eleveModel), HttpStatus.OK);
     }
 
     @GetMapping("/findEleveById/{id}")
@@ -108,13 +87,27 @@ public class EleveController {
     }
 
     @GetMapping("/findEleveByNom")
-    public List<EleveModel> getByNom(@PathParam(value = "nom") String nom){
+    public List<EleveModel> getByNom(@PathParam(value ="nom" ) String nom){
         return eleveService.getEleveByNom(nom);
+    }
+
+    @GetMapping("/findEleveByMatricule/{matricule}")
+    public ResponseEntity<EleveModel> getEleveByMatriucle(@PathVariable("matricule") String matricule){
+        return eleveService.getEleveByMatricule(matricule);
     }
 
     @DeleteMapping("/deleteEleve/{id}")
     public String deleteEleve(@PathVariable String id){
+
+        EleveModel eleveModel = eleveRepository.findById(id).orElse(null);
+        SalleModel salleModel = eleveModel.getSalle();
+        for (EleveModel eleve : salleModel.getEleve()){
+            if (id == eleve.getId()){
+                salleModel.setEleve(null);
+            }
+        }
         eleveRepository.deleteById(id);
+
         return "Deleted Successfully";
     }
 

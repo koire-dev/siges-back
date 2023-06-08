@@ -2,8 +2,10 @@ package com.siges.controller;
 
 import com.siges.model.EleveModel;
 import com.siges.model.MatiereModel;
+import com.siges.model.NotesModel;
 import com.siges.repository.EleveRepository;
 import com.siges.repository.MatiereRepository;
+import com.siges.service.MatiereService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ public class MatiereController {
 
     @Autowired
     private MatiereRepository matiereRepository;
+    @Autowired
+    private MatiereService matiereService;
 
     @PostMapping("/addMatiere")
     public ResponseEntity<MatiereModel> saveMatiere(@RequestBody MatiereModel matiereModel){
@@ -32,24 +36,22 @@ public class MatiereController {
         return matiereRepository.findAll();
     }
 
+    //La liste des notes des eleves pour une matiere
+    @GetMapping("/findNotesEleveByIdMatiere/{id}")
+    public List<NotesModel> getNotesEleve(@PathVariable("id") String id){
+        return matiereService.getNotesEleve(id);
+    }
+
+    @GetMapping("/findMatiereBYId/{id}")
+    public ResponseEntity<MatiereModel> getMatiereById(@PathVariable("id") String id){
+        MatiereModel matiereModel = matiereRepository.findById(id).orElse(null);
+        return new ResponseEntity<>(matiereModel, HttpStatus.OK);
+    }
+
     @PutMapping("/updateMatiere/{id}")
     public ResponseEntity<MatiereModel> updateMatiere(@PathVariable(value = "id") String id, @RequestBody MatiereModel matiereModel){
-        MatiereModel matiere = matiereRepository.findById(id).orElse(null);
-        if (matiere == null)
-        {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
 
-        matiere.setGroupe_matiere(matiereModel.getGroupe_matiere());
-        matiere.setCode(matiereModel.getCode());
-        matiere.setEleve(matiereModel.getEleve());
-        matiere.setGrade_enseignant(matiereModel.getGrade_enseignant());
-        matiere.setIntitule(matiereModel.getIntitule());
-        matiere.setNom_enseignant(matiereModel.getNom_enseignant());
-        matiere.setRole_enseignant(matiereModel.getRole_enseignant());
-
-        MatiereModel updateMatiere = matiereRepository.save(matiere);
-        return new ResponseEntity<>(updateMatiere, HttpStatus.OK);
+        return new ResponseEntity<>(matiereService.updateMatiere(id, matiereModel), HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteMatiere/{id}")

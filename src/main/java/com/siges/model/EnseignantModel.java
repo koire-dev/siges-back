@@ -12,20 +12,18 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "salle")
-public class SalleModel {
-    // Attributes
+@Document(collection ="enseignant")
+public class EnseignantModel {
+
     @Id
     private String id;
+    private String nom;
+    private String prenom;
+    private String grade;
+    private String matricule;
 
-    private String label;
-    @DBRef(lazy = true)
-    private List<EleveModel> eleve;
-    @DBRef(lazy = true)
+    @DBRef
     private List<MatiereModel> matiere;
-
-    public SalleModel(String label, String id) {
-        this.id = id;
-        this.label = label;
-    }
+    @DBRef
+    private List<SalleModel> salle;
 }

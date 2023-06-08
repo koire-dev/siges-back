@@ -1,10 +1,15 @@
 package com.siges.controller;
 
+import com.siges.model.EnseignantModel;
 import com.siges.model.SalleModel;
 import com.siges.repository.SalleRepository;
+import com.siges.service.SalleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -12,24 +17,31 @@ public class SalleController {
 
     @Autowired(required = false)
     private SalleRepository salleRepository;
-
-    @GetMapping("/homeSalle")
-    public String hello() {
-        return "Hello World to SIGES APP!";
-    }
+    @Autowired
+    private SalleService salleService;
 
     @PostMapping("/addSalle")
-    public String saveSalle(@RequestBody SalleModel salle){
-        salleRepository.save(salle);
-        return "Added Successfully";
+    public ResponseEntity<SalleModel> saveSalle(@RequestBody SalleModel salle){
+
+        if (salle == null){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        SalleModel salleModel = salleRepository.save(salle);
+        return new ResponseEntity<>(salleModel, HttpStatus.OK);
     }
 
-    @GetMapping("/findAllsalle")
+    @PutMapping("/updateSalle/{id}")
+    public ResponseEntity<SalleModel> updateSalle(@PathVariable("id") String id, @RequestBody SalleModel salleModel){
+
+        return new ResponseEntity<>(salleService.updateSalle(id, salleModel), HttpStatus.OK);
+    }
+
+    @GetMapping("/findAllSalle")
     public List<SalleModel> getSalles() {
         return salleRepository.findAll();
     }
 
-    @DeleteMapping("/deletesalle/{id}")
+    @DeleteMapping("/deleteSalle/{id}")
     public String deleteSalle(@PathVariable String id){
         salleRepository.deleteById(id);
         return "Deleted Successfully";
