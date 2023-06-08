@@ -36,10 +36,10 @@ public class MatiereController {
         return matiereRepository.findAll();
     }
 
-    //La liste des notes des eleves pour une matiere
-    @GetMapping("/findNotesEleveByIdMatiere/{id}")
-    public List<NotesModel> getNotesEleve(@PathVariable("id") String id){
-        return matiereService.getNotesEleve(id);
+    //La liste des notes des eleves pour une matiere par sequence
+    @GetMapping("/findNotesEleveByIdMatiere/{id}/{sequence}")
+    public List<NotesModel> getNotesEleve(@PathVariable("id") String id, @PathVariable("sequence") Long sequence){
+        return matiereService.getNotesEleve(id, sequence);
     }
 
     @GetMapping("/findMatiereBYId/{id}")

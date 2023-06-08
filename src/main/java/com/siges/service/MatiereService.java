@@ -21,14 +21,14 @@ public class MatiereService {
     @Autowired
     private NotesRepository notesRepository;
 
-    public List<NotesModel> getNotesEleve(String id){
+    public List<NotesModel> getNotesEleve(String id, Long sequence){
 
         MatiereModel matiereModel = matiereRepository.findById(id).orElse(null);
         List<NotesModel> notesModelList = new ArrayList<>();
 
         for (EleveModel eleveModel : matiereModel.getEleve()){
             for (NotesModel notesModel : eleveModel.getNotes()){
-                if (notesModel.getMatiereModel().getId() == matiereModel.getId()){
+                if ((notesModel.getMatiereModel().getId() == matiereModel.getId()) && (sequence ==notesModel.getSequence())){
                     notesModelList.add(notesModel);
                 }
 //                notesModelList.add(notesModel);

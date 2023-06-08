@@ -7,8 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,14 +18,14 @@ public class NotesModel {
     private String appreciation;
     private Double valeur;
     private Long sequence;
-    private String trimestre;
+    private Long trimestre;
 
     @DBRef
     private MatiereModel matiereModel;
     @DBRef
     private EleveModel eleveModel;
 
-    public NotesModel(String id, String appreciation, Double valeur, Long sequence, String trimestre) {
+    public NotesModel(String id, String appreciation, Double valeur, Long sequence, Long trimestre) {
 
         this.id = id;
         this.appreciation = appreciation;
