@@ -43,7 +43,7 @@ public class NotesModel {
 
     public String getAppreciationByValeur(Double valeur){
 
-        if (valeur < 10){
+        if ((valeur >= 0) && (valeur < 10)){
             return "Mediocre";
         }else if ((valeur >= 10) && (valeur <12)){
             return "Passable";
